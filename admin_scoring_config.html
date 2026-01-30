@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartHire – Scoring Configuration</title>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Color Palette - Matching Admin Dashboard */
+            --primary-blue: #3B5BDB;
+            --primary-indigo: #364FC7;
+            --sidebar-gradient-top: #2F3E9E;
+            --sidebar-gradient-bottom: #1E2A78;
+            
+            --bg-main: #EEF1FF;
+            --bg-card: #FFFFFF;
+            
+            --status-success: #2F9E44;
+            --status-bg-success: #EBFBEE;
+            --status-warning: #F08C00;
+            --status-bg-warning: #FFF4E6;
+            --status-error: #E03131;
+            --status-bg-error: #FFF5F5;
+            --status-info: #0CA678;
+            --status-bg-info: #E6FCF5;
+            
+            --text-primary: #1C1F2A;
+            --text-secondary: #5C6270;
+            --text-muted: #8B90A0;
+            
+            --border-light: #E5E7EB;
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, var(--sidebar-gradient-top) 0%, var(--sidebar-gradient-bottom) 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .logo-area {
+            padding: 24px;
+            font-size: 22px;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-item.active {
+            color: white;
+            background: rgba(255,255,255,0.15);
+            border-left: 4px solid var(--status-info);
+        }
+
+        .nav-item i {
+            width: 24px;
+            margin-right: 10px;
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            height: 70px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            flex-shrink: 0;
+        }
+
+        .header-title h2 { font-size: 18px; font-weight: 600; }
+        .header-title span { font-size: 13px; color: var(--text-secondary); }
+
+        .header-actions { display: flex; align-items: center; gap: 20px; }
+        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .avatar { width: 36px; height: 36px; background: var(--primary-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; }
+
+        /* --- Layout Grid for Config Screen --- */
+        .config-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 24px;
+            padding: 30px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .config-main {
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .config-sidebar {
+            position: sticky;
+            top: 0;
+            height: fit-content;
+        }
+
+        /* --- Cards & Components --- */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-light);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary { background: var(--primary-blue); color: white; }
+        .btn-primary:hover { background: var(--primary-indigo); }
+        .btn-primary:disabled { background: #A5B3F0; cursor: not-allowed; }
+        
+        .btn-secondary { background: white; border-color: var(--border-light); color: var(--text-secondary); }
+        .btn-secondary:hover { background: #F8F9FA; border-color: #D1D5DB; }
+
+        .btn-danger { background: var(--status-error); color: white; }
+        .btn-danger:hover { background: #C92A2A; }
+
+        .btn-block { width: 100%; }
+
+        /* --- Forms --- */
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; color: var(--text-primary); }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-control:focus { border-color: var(--primary-blue); }
+        
+        .form-row { display: flex; gap: 20px; }
+        .form-col { flex: 1; }
+
+        /* --- Accordion --- */
+        .accordion-item {
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            background: white;
+            overflow: hidden;
+        }
+        
+        .accordion-header {
+            padding: 16px 20px;
+            background: #F8F9FA;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid transparent;
+            transition: background 0.2s;
+        }
+        .accordion-header:hover { background: #F1F3F5; }
+        .accordion-item.active .accordion-header {
+            border-bottom-color: var(--border-light);
+            background: white;
+        }
+        
+        .accordion-title { font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 10px; }
+        .accordion-meta { font-size: 13px; color: var(--text-secondary); margin-right: 10px; }
+        
+        .accordion-body {
+            padding: 24px;
+            display: none;
+        }
+        .accordion-item.active .accordion-body { display: block; }
+
+        /* --- Sliders --- */
+        .weight-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .weight-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            height: 6px;
+            background: #E9ECEF;
+            border-radius: 3px;
+            outline: none;
+        }
+        .weight-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .weight-slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+        .weight-input { width: 70px; text-align: center; font-weight: 600; }
+
+        /* --- Status Badges --- */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-draft { background: var(--status-bg-warning); color: var(--status-warning); }
+        .badge-active { background: var(--status-bg-success); color: var(--status-success); }
+        .badge-error { background: var(--status-bg-error); color: var(--status-error); }
+
+        /* --- Validation List --- */
+        .validation-list { list-style: none; }
+        .validation-item {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 14px;
+        }
+        .validation-item.error { background: var(--status-bg-error); color: #C92A2A; border: 1px solid #FFC9C9; }
+        .validation-item.warning { background: var(--status-bg-warning); color: #E67700; border: 1px solid #FFE8CC; }
+        .validation-item.success { background: var(--status-bg-success); color: #2B8A3E; border: 1px solid #B2F2BB; }
+
+        /* --- View Switching --- */
+        .view-section { display: none; height: 100%; }
+        .view-section.active { display: block; }
+
+        /* --- Comparison Table --- */
+        .comparison-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .comparison-table th { text-align: left; padding: 12px; background: #F8F9FA; border-bottom: 1px solid var(--border-light); color: var(--text-secondary); }
+        .comparison-table td { padding: 12px; border-bottom: 1px solid var(--border-light); vertical-align: top; }
+        .diff-added { background: #E6FCF5; color: #087F5B; padding: 2px 6px; border-radius: 4px; }
+        .diff-removed { background: #FFF5F5; color: #C92A2A; text-decoration: line-through; padding: 2px 6px; border-radius: 4px; }
+        .diff-changed { background: #FFF9DB; color: #E67700; padding: 2px 6px; border-radius: 4px; }
+
+        /* --- Toggle Switch --- */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary-blue); }
+        input:checked + .slider:before { transform: translateX(18px); }
+
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo-area">
+            <i class="fa-solid fa-briefcase"></i> SmartHire
+        </div>
+        <nav class="nav-menu">
+            <a href="#" class="nav-item"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-user-shield"></i> User Management</a>
+            <a href="#" class="nav-item active"><i class="fa-solid fa-hammer"></i> Scoring Config</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-database"></i> Data Retention</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-history"></i> Audit Logs</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-area-chart"></i> System Monitoring</a>
+            <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 24px;"></div>
+            <a href="#" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-circle-question"></i> Help</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-title">
+                <h2>Scoring & Evaluation Configuration</h2>
+                <span>Admin Console / System Configuration / Scoring Rules</span>
+            </div>
+            <div class="header-actions">
+                <div class="user-profile">
+                    <div class="avatar">AD</div>
+                    <span style="font-size: 14px; font-weight: 500;">Admin User</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ========================================= -->
+        <!-- 9.1 SCORING RULES CONFIGURATION SCREEN    -->
+        <!-- ========================================= -->
+        <div id="view-config" class="view-section active">
+            <div class="config-layout">
+                
+                <!-- Left: Main Config Area -->
+                <div class="config-main">
+                    
+                    <!-- Context Header -->
+                    <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px;">
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Active Configuration Version</div>
+                            <div style="font-weight: 700; font-size: 18px;">v2.4.0</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Status</div>
+                            <span class="badge badge-draft">Draft Mode</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Last Modified</div>
+                            <div style="font-size: 14px; font-weight: 500;">Today, 10:42 AM by Admin</div>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text-secondary);">Evaluation Dimensions</h3>
+
+                    <!-- Dimension 1: Skills -->
+                    <div class="accordion-item active">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">
+                                <i class="fa-solid fa-code"></i> Skills Match
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <span class="accordion-meta">Weight: <strong id="disp-weight-1">40%</strong></span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="accordion-body">
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <input type="text" class="form-control" value="Technical skills match based on JD keywords and proficiency levels.">
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label class="form-label">Weightage (%)</label>
+                                    <div class="weight-slider-container">
+                                        <input type="range" min="0" max="100" value="40" class="weight-slider" oninput="updateWeight(1, this.value)">
+                                        <input type="number" min="0" max="100" value="40" class="form-control weight-input" id="input-weight-1" onchange="updateWeight(1, this.value)">
+                                    </div>
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">Scoring Method</label>
+                                    <select class="form-control">
+                                        <option value="ai">AI-Derived (Semantic Match)</option>
+                                        <option value="binary">Binary (Has Skill / No Skill)</option>
+                                        <option value="range">Range-based (Years of Exp)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row" style="margin-top: 20px;">
+                                <div class="form-col">
+                                    <label class="form-label">Max Score Contribution</label>
+                                    <input type="number" class="form-control" value="40" disabled style="background: #F1F3F5;">
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">Minimum Threshold</label>
+                                    <input type="number" class="form-control" placeholder="Optional (e.g. 20)">
+                                </div>
+                                <div class="form-col" style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+                                    <label class="form-label" style="margin-bottom: 0;">Enabled</label>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dimension 2: Experience -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">
+                                <i class="fa-solid fa-briefcase"></i> Experience
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <span class="accordion-meta">Weight: <strong id="disp-weight-2">30%</strong></span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="accordion-body">
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <input type="text" class="form-control" value="Relevance and duration of past work experience.">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label class="form-label">Weightage (%)</label>
+                                    <div class="weight-slider-container">
+                                        <input type="range" min="0" max="100" value="30" class="weight-slider" oninput="updateWeight(2, this.value)">
+                                        <input type="number" min="0" max="100" value="30" class="form-control weight-input" id="input-weight-2" onchange="updateWeight(2, this.value)">
+                                    </div>
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">Scoring Method</label>
+                                    <select class="form-control">
+                                        <option value="range">Range-based (Years)</option>
+                                        <option value="ai">AI-Derived</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dimension 3: Education -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">
+                                <i class="fa-solid fa-graduation-cap"></i> Education
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <span class="accordion-meta">Weight: <strong id="disp-weight-3">20%</strong></span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="accordion-body">
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <input type="text" class="form-control" value="Academic qualifications and certifications.">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label class="form-label">Weightage (%)</label>
+                                    <div class="weight-slider-container">
+                                        <input type="range" min="0" max="100" value="20" class="weight-slider" oninput="updateWeight(3, this.value)">
+                                        <input type="number" min="0" max="100" value="20" class="form-control weight-input" id="input-weight-3" onchange="updateWeight(3, this.value)">
+                                    </div>
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">Scoring Method</label>
+                                    <select class="form-control">
+                                        <option value="binary">Binary (Degree Match)</option>
+                                        <option value="ai">AI-Derived</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Global Controls -->
+                    <div class="card" style="margin-top: 30px;">
+                        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 20px; border-bottom: 1px solid var(--border-light); padding-bottom: 10px;">Global Scoring Controls</h3>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label class="form-label">Overall Passing Score</label>
+                                <input type="number" class="form-control" value="70">
+                                <div class="form-hint">Candidates below this score are auto-rejected.</div>
+                            </div>
+                            <div class="form-col">
+                                <label class="form-label">Normalization Method</label>
+                                <select class="form-control">
+                                    <option value="none">None (Raw Score)</option>
+                                    <option value="minmax">Min-Max Scaling</option>
+                                    <option value="zscore">Z-Score</option>
+                                </select>
+                            </div>
+                            <div class="form-col">
+                                <label class="form-label">Rounding Rule</label>
+                                <select class="form-control">
+                                    <option value="nearest">Nearest Integer</option>
+                                    <option value="floor">Floor (Round Down)</option>
+                                    <option value="ceil">Ceiling (Round Up)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right: Sticky Sidebar -->
+                <aside class="config-sidebar">
+                    <div class="card">
+                        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 16px;">Configuration Summary</h3>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: var(--text-secondary); font-size: 14px;">Total Weightage</span>
+                                <span style="font-weight: 700; font-size: 14px;" id="total-weight-display">90%</span>
+                            </div>
+                            <div style="width: 100%; height: 8px; background: #E9ECEF; border-radius: 4px; overflow: hidden;">
+                                <div id="weight-progress-bar" style="width: 90%; height: 100%; background: var(--status-warning);"></div>
+                            </div>
+                            <div style="font-size: 12px; color: var(--status-error); margin-top: 6px; display: block;" id="weight-error-msg">
+                                <i class="fa-solid fa-circle-exclamation"></i> Must equal 100%
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">Validation Status</div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-triangle-exclamation" style="color: var(--status-warning);"></i>
+                                <span style="font-weight: 500; color: var(--status-warning);">Checks Pending</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-block" onclick="switchView('validation')">
+                            Proceed to Validation <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text-muted);">Version History</h3>
+                        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border-light);">
+                            <strong>v2.3.0</strong> (Active)<br>
+                            <span style="font-size: 12px; color: var(--text-muted);">Activated Jan 10, 2024</span>
+                        </div>
+                        <div style="font-size: 13px; color: var(--text-secondary);">
+                            <strong>v2.2.0</strong> (Archived)<br>
+                            <span style="font-size: 12px; color: var(--text-muted);">Activated Dec 01, 2023</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <!-- ========================================= -->
+        <!-- 9.2 WEIGHTAGE VALIDATION SCREEN           -->
+        <!-- ========================================= -->
+        <div id="view-validation" class="view-section">
+            <div style="padding: 30px; max-width: 900px; margin: 0 auto;">
+                
+                <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 15px;">
+                    <button class="btn btn-secondary btn-sm" onclick="switchView('config')"><i class="fa-solid fa-arrow-left"></i> Back to Config</button>
+                    <h2 style="font-size: 20px; font-weight: 600;">Configuration Validation</h2>
+                </div>
+
+                <!-- Validation Summary Card -->
+                <div class="card" style="border-left: 4px solid var(--status-error);">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div style="width: 50px; height: 50px; background: var(--status-bg-error); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--status-error); font-size: 24px;">
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 18px; font-weight: 600; color: var(--status-error);">Validation Failed</h3>
+                            <p style="color: var(--text-secondary); font-size: 14px;">Critical errors were found in the scoring logic. These must be resolved before activation.</p>
+                        </div>
+                        <div style="margin-left: auto; text-align: right;">
+                            <div style="font-size: 24px; font-weight: 700;">2</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Errors</div>
+                        </div>
+                        <div style="text-align: right; padding-left: 20px; border-left: 1px solid var(--border-light);">
+                            <div style="font-size: 24px; font-weight: 700;">1</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Warning</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error List -->
+                <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text-secondary);">Critical Errors (2)</h4>
+                <ul class="validation-list">
+                    <li class="validation-item error">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <div style="flex: 1;">
+                            <strong>Total Weightage Mismatch</strong>
+                            <div style="font-size: 13px; margin-top: 2px;">Sum of all dimensions is 90%. Total must equal exactly 100%.</div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" onclick="switchView('config')">Fix Now</button>
+                    </li>
+                    <li class="validation-item error">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <div style="flex: 1;">
+                            <strong>Missing Dependency</strong>
+                            <div style="font-size: 13px; margin-top: 2px;">"Skills Match" uses AI-Derived scoring but AI Engine connector is not configured.</div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm">Configure AI</button>
+                    </li>
+                </ul>
+
+                <!-- Warning List -->
+                <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 12px; margin-top: 24px; color: var(--text-secondary);">Warnings (1)</h4>
+                <ul class="validation-list">
+                    <li class="validation-item warning">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <div style="flex: 1;">
+                            <strong>High Threshold Value</strong>
+                            <div style="font-size: 13px; margin-top: 2px;">"Education" threshold (80) is close to Max Score (100). This may result in high rejection rates.</div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm">Review</button>
+                    </li>
+                </ul>
+
+                <!-- Actions -->
+                <div style="margin-top: 30px; display: flex; justify-content: flex-end; gap: 12px;">
+                    <button class="btn btn-secondary" onclick="alert('Re-running validation checks...')"><i class="fa-solid fa-rotate-right"></i> Re-run Validation</button>
+                    <!-- Disabled until errors fixed -->
+                    <button class="btn btn-primary" onclick="switchView('confirmation')">Proceed to Confirmation</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ========================================= -->
+        <!-- 9.3 CONFIGURATION CHANGE CONFIRMATION     -->
+        <!-- ========================================= -->
+        <div id="view-confirmation" class="view-section">
+            <div style="padding: 30px; max-width: 900px; margin: 0 auto;">
+                
+                <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 15px;">
+                    <button class="btn btn-secondary btn-sm" onclick="switchView('validation')"><i class="fa-solid fa-arrow-left"></i> Back to Validation</button>
+                    <h2 style="font-size: 20px; font-weight: 600;">Confirm Configuration Changes</h2>
+                </div>
+
+                <div class="card">
+                    <div class="alert-banner" style="background: #FFF5F5; border: 1px solid #FFC9C9; color: #C92A2A; padding: 12px; border-radius: 6px; display: flex; gap: 10px; margin-bottom: 20px;">
+                        <i class="fa-solid fa-triangle-exclamation" style="margin-top: 2px;"></i>
+                        <div>
+                            <strong>Irreversible Action:</strong> Activating this configuration will immediately impact all new candidate evaluations.
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                        <div>
+                            <label class="form-label" style="color: var(--text-secondary);">Current Version</label>
+                            <div style="font-weight: 600;">v2.3.0</div>
+                        </div>
+                        <div>
+                            <label class="form-label" style="color: var(--text-secondary);">New Version (Draft)</label>
+                            <div style="font-weight: 600; color: var(--primary-blue);">v2.4.0</div>
+                        </div>
+                        <div>
+                            <label class="form-label" style="color: var(--text-secondary);">Effective Date</label>
+                            <div>Immediate</div>
+                        </div>
+                        <div>
+                            <label class="form-label" style="color: var(--text-secondary);">Impact Scope</label>
+                            <div>New analyses only</div>
+                        </div>
+                    </div>
+
+                    <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">Change Summary</h4>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Dimension</th>
+                                <th>Property</th>
+                                <th>Old Value</th>
+                                <th>New Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Skills Match</td>
+                                <td>Weightage</td>
+                                <td>35%</td>
+                                <td><span class="diff-changed">40%</span></td>
+                            </tr>
+                            <tr>
+                                <td>Education</td>
+                                <td>Weightage</td>
+                                <td>25%</td>
+                                <td><span class="diff-changed">20%</span></td>
+                            </tr>
+                            <tr>
+                                <td>Certifications</td>
+                                <td>Status</td>
+                                <td>Active</td>
+                                <td><span class="diff-removed">Removed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Governance & Audit</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Reason for Change <span style="color: var(--status-error);">*</span></label>
+                        <select class="form-control">
+                            <option value="">Select a reason...</option>
+                            <option value="policy">Policy Update</option>
+                            <option value="bias">Bias Correction</option>
+                            <option value="tuning">Performance Tuning</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Detailed Justification <span style="color: var(--status-error);">*</span></label>
+                        <textarea class="form-control" rows="3" placeholder="Explain why these changes are necessary..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" style="margin-top: 4px;">
+                            <span style="font-size: 14px; color: var(--text-secondary);">
+                                I acknowledge that I have reviewed the impact of these changes and confirm they comply with organizational hiring policies.
+                            </span>
+                        </label>
+                    </div>
+
+                    <div style="margin-top: 30px; display: flex; justify-content: flex-end; gap: 12px;">
+                        <button class="btn btn-secondary" onclick="switchView('config')">Cancel</button>
+                        <button class="btn btn-primary" onclick="alert('Configuration v2.4.0 Activated Successfully!')">Activate Configuration</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- View Switching Logic ---
+        function switchView(viewId) {
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            // Show requested view
+            document.getElementById('view-' + viewId).classList.add('active');
+            // Scroll to top
+            document.querySelector('.main-content').scrollTop = 0;
+        }
+
+        // --- Accordion Logic ---
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            // Optional: Close others
+            // document.querySelectorAll('.accordion-item').forEach(el => {
+            //     if(el !== item) el.classList.remove('active');
+            // });
+            item.classList.toggle('active');
+            
+            // Rotate icon
+            const icon = header.querySelector('.fa-chevron-down');
+            if (item.classList.contains('active')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // --- Weightage Logic ---
+        function updateWeight(id, value) {
+            // Sync slider and input
+            document.getElementById('input-weight-' + id).value = value;
+            document.querySelector(`.weight-slider[oninput*="updateWeight(${id}"]`).value = value;
+            
+            // Update header display
+            document.getElementById('disp-weight-' + id).textContent = value + '%';
+            
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            let total = 0;
+            // Sum up values from inputs
+            document.querySelectorAll('.weight-input').forEach(input => {
+                total += parseInt(input.value) || 0;
+            });
+
+            const display = document.getElementById('total-weight-display');
+            const bar = document.getElementById('weight-progress-bar');
+            const errorMsg = document.getElementById('weight-error-msg');
+
+            display.textContent = total + '%';
+            bar.style.width = Math.min(total, 100) + '%';
+
+            if (total === 100) {
+                bar.style.background = 'var(--status-success)';
+                errorMsg.style.display = 'none';
+            } else if (total > 100) {
+                bar.style.background = 'var(--status-error)';
+                errorMsg.style.display = 'block';
+                errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Total exceeds 100%';
+            } else {
+                bar.style.background = 'var(--status-warning)';
+                errorMsg.style.display = 'block';
+                errorMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Must equal 100%';
+            }
+        }
+
+        // Initial calculation
+        calculateTotal();
+    </script>
+</body>
+</html>

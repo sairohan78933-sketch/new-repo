@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartHire – User Management</title>
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Color Palette - Matching Admin Dashboard */
+            --primary-blue: #3B5BDB;
+            --primary-indigo: #364FC7;
+            --sidebar-gradient-top: #2F3E9E;
+            --sidebar-gradient-bottom: #1E2A78;
+
+            --bg-main: #EEF1FF;
+            --bg-card: #FFFFFF;
+
+            --status-success: #2F9E44;
+            --status-bg-success: #EBFBEE;
+            --status-warning: #F08C00;
+            --status-bg-warning: #FFF4E6;
+            --status-error: #E03131;
+            --status-bg-error: #FFF5F5;
+            --status-info: #0CA678;
+            --status-bg-info: #E6FCF5;
+
+            --text-primary: #1C1F2A;
+            --text-secondary: #5C6270;
+            --text-muted: #8B90A0;
+
+            --border-light: #E5E7EB;
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- Sidebar (Consistent with Dashboard) --- */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, var(--sidebar-gradient-top) 0%, var(--sidebar-gradient-bottom) 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .logo-area {
+            padding: 24px;
+            font-size: 22px;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.15);
+            border-left: 4px solid var(--status-info);
+        }
+
+        .nav-item i {
+            width: 24px;
+            margin-right: 10px;
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            height: 70px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            flex-shrink: 0;
+        }
+
+        .header-title h2 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-title span {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* --- Scrollable Area --- */
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        /* --- Common UI Components --- */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-light);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-indigo);
+        }
+
+        .btn-secondary {
+            background: white;
+            border-color: var(--border-light);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            background: #F8F9FA;
+            border-color: #D1D5DB;
+        }
+
+        .btn-danger {
+            background: var(--status-error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #C92A2A;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* --- Forms --- */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .form-control:disabled {
+            background: #F8F9FA;
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .required-star {
+            color: var(--status-error);
+            margin-left: 2px;
+        }
+
+        /* --- Data Table --- */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table th {
+            background: #F8F9FA;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-primary);
+            vertical-align: middle;
+        }
+
+        .data-table tbody tr:hover {
+            background: #F8F9FA;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* --- Status Badges --- */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-active {
+            background: var(--status-bg-success);
+            color: var(--status-success);
+        }
+
+        .badge-disabled {
+            background: var(--status-bg-warning);
+            color: var(--status-warning);
+        }
+
+        .badge-locked {
+            background: var(--status-bg-error);
+            color: var(--status-error);
+        }
+
+        .badge-role {
+            background: #E7F5FF;
+            color: var(--primary-blue);
+            border: 1px solid #D0EBFF;
+        }
+
+        /* --- Filters Bar --- */
+        .filters-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-box input {
+            padding-left: 36px;
+        }
+
+        /* --- Action Menu --- */
+        .action-cell {
+            position: relative;
+            text-align: right;
+        }
+
+        .action-btn-trigger {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .action-btn-trigger:hover {
+            background: #F1F3F5;
+            color: var(--text-primary);
+        }
+
+        .action-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-card);
+            border-radius: 6px;
+            width: 140px;
+            z-index: 10;
+            display: none;
+            flex-direction: column;
+            padding: 4px 0;
+        }
+
+        .action-menu.show {
+            display: flex;
+        }
+
+        .action-item {
+            padding: 8px 16px;
+            font-size: 13px;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .action-item:hover {
+            background: #F8F9FA;
+        }
+
+        .action-item.danger {
+            color: var(--status-error);
+        }
+
+        /* --- Modal --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(2px);
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-modal);
+            overflow: hidden;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            background: #F8F9FA;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* --- View Switching Utilities --- */
+        .view-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .alert-banner {
+            background: var(--status-bg-warning);
+            border: 1px solid #FFEC99;
+            color: #E67700;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Bulk Action Bar */
+        .bulk-actions {
+            background: var(--text-primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            display: none;
+            /* Hidden by default */
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .bulk-actions.show {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo-area">
+            <i class="fa-solid fa-briefcase"></i> SmartHire
+        </div>
+        <nav class="nav-menu">
+            <a href="#" class="nav-item"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+            <a href="#" class="nav-item active" onclick="switchView('list')"><i class="fa-solid fa-user-shield"></i>
+                User Management</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-hammer"></i> Scoring Config</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-database"></i> Data Retention</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-history"></i> Audit Logs</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-area-chart"></i> System Monitoring</a>
+            <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 24px;"></div>
+            <a href="#" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-circle-question"></i> Help</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-title">
+                <h2>User Management</h2>
+                <span>Admin Console / Users & Roles</span>
+            </div>
+            <div class="header-actions">
+                <div class="user-profile">
+                    <div class="avatar">AD</div>
+                    <span style="font-size: 14px; font-weight: 500;">Admin User</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-scroll">
+
+            <!-- ========================================= -->
+            <!-- 8.1 USER LIST SCREEN (Default View)       -->
+            <!-- ========================================= -->
+            <div id="view-user-list" class="view-section active">
+
+                <!-- Bulk Action Bar -->
+                <div class="bulk-actions" id="bulkActionBar">
+                    <span><i class="fa-solid fa-check-square"></i> 2 Users Selected</span>
+                    <button class="btn btn-sm btn-danger" onclick="openDeactivateModal('Multiple Users')">Disable
+                        Selected</button>
+                </div>
+
+                <div class="card">
+                    <!-- Filters -->
+                    <div class="filters-bar">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" class="form-control" placeholder="Search by name or email...">
+                        </div>
+                        <select class="form-control" style="width: auto;">
+                            <option value="">All Roles</option>
+                            <option value="admin">Admin</option>
+                            <option value="hr">HR Manager</option>
+                            <option value="recruiter">Recruiter</option>
+                        </select>
+                        <select class="form-control" style="width: auto;">
+                            <option value="">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="disabled">Disabled</option>
+                            <option value="locked">Locked</option>
+                        </select>
+                        <!-- From Date -->
+                        <div style="display:flex; flex-direction:column; justify-content:center;">
+                            <input type="date" class="form-control">
+                        </div>
+
+                        <div style="margin-left: auto; display: flex; gap: 10px;">
+                            <button class="btn btn-secondary"><i class="fa-solid fa-download"></i> Export CSV</button>
+                            <button class="btn btn-primary" onclick="switchView('create')"><i
+                                    class="fa-solid fa-plus"></i> Create User</button>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;"><input type="checkbox" onchange="toggleBulkActions(this)">
+                                    </th>
+                                    <th>User ID</th>
+                                    <th>Full Name <i class="fa-solid fa-sort fa-xs"></i></th>
+                                    <th>Email Address</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Last Login</th>
+                                    <th>Created On</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Row 1 -->
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td style="font-family: monospace; color: var(--text-muted);">USR-001</td>
+                                    <td style="font-weight: 500;">Sarah Jenkins</td>
+                                    <td>s.jenkins@smarthire.com</td>
+                                    <td><span class="badge badge-role">Admin</span></td>
+                                    <td><span class="badge badge-active">Active</span></td>
+                                    <td style="font-size: 13px; color: var(--text-secondary);">Just now</td>
+                                    <td style="font-size: 13px; color: var(--text-secondary);">Jan 12, 2024</td>
+                                    <td class="action-cell">
+                                        <button class="action-btn-trigger" onclick="toggleMenu('menu1')"><i
+                                                class="fa-solid fa-ellipsis-vertical"></i></button>
+                                        <div id="menu1" class="action-menu">
+                                            <div class="action-item" onclick="switchView('edit')"><i
+                                                    class="fa-regular fa-pen-to-square"></i> Edit</div>
+                                            <div class="action-item"><i class="fa-solid fa-clock-rotate-left"></i>
+                                                Activity</div>
+                                            <div class="action-item danger"
+                                                onclick="openDeactivateModal('Sarah Jenkins')"><i
+                                                    class="fa-solid fa-ban"></i> Disable</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Row 2 -->
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td style="font-family: monospace; color: var(--text-muted);">USR-002</td>
+                                    <td style="font-weight: 500;">Michael Torres</td>
+                                    <td>m.torres@smarthire.com</td>
+                                    <td><span class="badge badge-role">Recruiter</span></td>
+                                    <td><span class="badge badge-active">Active</span></td>
+                                    <td style="font-size: 13px; color: var(--text-secondary);">2 hours ago</td>
+                                    <td style="font-size: 13px; color: var(--text-secondary);">Feb 04, 2024</td>
+                                    <td class="action-cell">
+                                        <button class="action-btn-trigger" onclick="toggleMenu('menu2')"><i
+                                                class="fa-solid fa-ellipsis-vertical"></i></button>
+                                        <div id="menu2" class="action-menu">
+                                            <div class="action-item" onclick="switchView('edit')"><i
+                                                    class="fa-regular fa-pen-to-square"></i> Edit</div>
+                                            <div class="action-item"><i class="fa-solid fa-clock-rotate-left"></i>
+                                                Activity</div>
+                                            <div class="action-item danger"
+                                                onclick="openDeactivateModal('Michael Torres')"><i
+                                                    class="fa-solid fa-ban"></i> Disable</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Row 3 -->
+                                <tr>
+                                    <td><input type="checkbox"></td>
+                                    <td style="font-family: monospace; color: var(--text-muted);">USR-003</td>
+                                    <td style="font-weight: 500;">David Chen</td>
+                                    <td>d.chen@smarthire.com</td>
+                                    <td><span class="badge badge-role">HR Manager</span></td>
+                                    <td><span class="badge badge-disabled">Disabled</span></td>
+                                    <td style="font-size: 13px; color: var(--text-secondary);">14 days ago</td>
+                                    <td style="font-size: 13px; color: var(--text-secondary);">Mar 10, 2024</td>
+                                    <td class="action-cell">
+                                        <button class="action-btn-trigger" onclick="toggleMenu('menu3')"><i
+                                                class="fa-solid fa-ellipsis-vertical"></i></button>
+                                        <div id="menu3" class="action-menu">
+                                            <div class="action-item" onclick="switchView('edit')"><i
+                                                    class="fa-regular fa-pen-to-square"></i> Edit</div>
+                                            <div class="action-item"><i class="fa-solid fa-clock-rotate-left"></i>
+                                                Activity</div>
+                                            <div class="action-item danger"><i class="fa-solid fa-trash"></i> Delete
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                        <span style="font-size: 13px; color: var(--text-secondary);">Showing 1-3 of 45 users</span>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn btn-secondary btn-sm" disabled>Previous</button>
+                            <button class="btn btn-primary btn-sm">1</button>
+                            <button class="btn btn-secondary btn-sm">2</button>
+                            <button class="btn btn-secondary btn-sm">3</button>
+                            <button class="btn btn-secondary btn-sm">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================= -->
+            <!-- 8.2 CREATE USER SCREEN                    -->
+            <!-- ========================================= -->
+            <div id="view-create-user" class="view-section">
+                <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                    <button class="btn btn-secondary btn-sm" onclick="switchView('list')"><i
+                            class="fa-solid fa-arrow-left"></i> Back</button>
+                    <h2 style="font-size: 20px; font-weight: 600;">Create New User</h2>
+                </div>
+
+                <div class="card" style="max-width: 800px;">
+                    <form onsubmit="event.preventDefault(); switchView('list'); alert('User created successfully!');">
+                        <div class="form-group">
+                            <label class="form-label">Full Name <span class="required-star">*</span></label>
+                            <input type="text" class="form-control" placeholder="e.g. John Doe" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email Address <span class="required-star">*</span></label>
+                            <input type="email" class="form-control" placeholder="e.g. john.doe@company.com" required>
+                            <div class="form-hint">Must be unique within the organization.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Role Assignment <span class="required-star">*</span></label>
+                            <select class="form-control" required>
+                                <option value="" disabled selected>Select a role...</option>
+                                <option value="admin">Admin (Full Access)</option>
+                                <option value="hr">HR Manager (Manage Jobs & Candidates)</option>
+                                <option value="recruiter">Recruiter (View & Screen Candidates)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Access Scope (Optional)</label>
+                            <select class="form-control" multiple style="height: 100px;">
+                                <option value="eng">Engineering Dept</option>
+                                <option value="sales">Sales Dept</option>
+                                <option value="marketing">Marketing Dept</option>
+                                <option value="finance">Finance Dept</option>
+                            </select>
+                            <div class="form-hint">Hold Ctrl/Cmd to select multiple departments.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Temporary Password</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" class="form-control" value="SmartHire2024!" id="tempPass">
+                                <button type="button" class="btn btn-secondary"
+                                    onclick="document.getElementById('tempPass').value = Math.random().toString(36).slice(-8)">Generate</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="forceChange" checked>
+                            <label for="forceChange" style="font-size: 14px;">Force password change on first
+                                login</label>
+                        </div>
+
+                        <div
+                            style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 12px;">
+                            <button type="button" class="btn btn-secondary" onclick="switchView('list')">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Create User</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ========================================= -->
+            <!-- 8.3 EDIT USER / ROLE ASSIGNMENT SCREEN    -->
+            <!-- ========================================= -->
+            <div id="view-edit-user" class="view-section">
+                <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                    <button class="btn btn-secondary btn-sm" onclick="switchView('list')"><i
+                            class="fa-solid fa-arrow-left"></i> Back</button>
+                    <h2 style="font-size: 20px; font-weight: 600;">Edit User: Sarah Jenkins</h2>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+
+                    <!-- Left: Edit Form -->
+                    <div class="card">
+                        <div class="alert-banner">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <div>
+                                <strong>Warning:</strong> Changing the user role will immediately update their
+                                permissions and access levels.
+                            </div>
+                        </div>
+
+                        <form onsubmit="event.preventDefault(); switchView('list'); alert('Changes saved!');">
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" value="Sarah Jenkins">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Role Assignment</label>
+                                <select class="form-control">
+                                    <option value="admin" selected>Admin</option>
+                                    <option value="hr">HR Manager</option>
+                                    <option value="recruiter">Recruiter</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Access Scope</label>
+                                <select class="form-control" multiple style="height: 80px;">
+                                    <option value="eng" selected>Engineering Dept</option>
+                                    <option value="sales">Sales Dept</option>
+                                    <option value="marketing">Marketing Dept</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Account Status</label>
+                                <div style="display: flex; gap: 20px; align-items: center;">
+                                    <label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                                        <input type="radio" name="status" checked> Active
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                                        <input type="radio" name="status"> Disabled
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                                        <input type="radio" name="status"> Locked
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div
+                                style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 12px;">
+                                <button type="button" class="btn btn-secondary"
+                                    onclick="switchView('list')">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Right: Read-Only Info -->
+                    <div class="card" style="height: fit-content;">
+                        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Account Details</h3>
+
+                        <div style="margin-bottom: 16px;">
+                            <label style="font-size: 12px; color: var(--text-muted); display: block;">User ID</label>
+                            <span style="font-family: monospace; font-size: 14px;">USR-001</span>
+                        </div>
+
+                        <div style="margin-bottom: 16px;">
+                            <label style="font-size: 12px; color: var(--text-muted); display: block;">Email
+                                Address</label>
+                            <span style="font-size: 14px;">s.jenkins@smarthire.com</span>
+                        </div>
+
+                        <div style="margin-bottom: 16px;">
+                            <label style="font-size: 12px; color: var(--text-muted); display: block;">Created On</label>
+                            <span style="font-size: 14px;">Jan 12, 2024</span>
+                        </div>
+
+                        <div style="margin-bottom: 16px;">
+                            <label style="font-size: 12px; color: var(--text-muted); display: block;">Last Login</label>
+                            <span style="font-size: 14px;">Today, 10:42 AM</span>
+                        </div>
+
+                        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-light);">
+                            <a href="#"
+                                style="font-size: 13px; color: var(--primary-blue); text-decoration: none; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-list-ul"></i> View Audit Log
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ========================================= -->
+    <!-- 8.4 DEACTIVATE / DISABLE CONFIRMATION     -->
+    <!-- ========================================= -->
+    <div id="modal-deactivate" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title text-danger" style="color: var(--status-error);">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Disable User Account
+                </div>
+                <button onclick="closeDeactivateModal()"
+                    style="background:none; border:none; cursor:pointer; font-size: 18px; color: var(--text-secondary);"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
+                    Are you sure you want to disable <strong id="modal-user-name"
+                        style="color: var(--text-primary);">User</strong>?
+                    This will immediately revoke their system access and terminate active sessions.
+                </p>
+
+                <div class="form-group">
+                    <label class="form-label">Reason for Deactivation <span class="required-star">*</span></label>
+                    <select class="form-control">
+                        <option value="">Select a reason...</option>
+                        <option value="left">Left Organization</option>
+                        <option value="role">Role Change</option>
+                        <option value="security">Security Concern</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Additional Comments (Optional)</label>
+                    <textarea class="form-control" rows="3" placeholder="Enter details for the audit log..."></textarea>
+                </div>
+
+                <div
+                    style="background: #FFF5F5; padding: 12px; border-radius: 6px; font-size: 12px; color: #C92A2A; display: flex; gap: 8px;">
+                    <i class="fa-solid fa-info-circle" style="margin-top: 2px;"></i>
+                    <span>This action will be recorded in the system audit log.</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDeactivateModal()">Cancel</button>
+                <button class="btn btn-danger"
+                    onclick="closeDeactivateModal(); alert('User disabled successfully.');">Confirm Disable</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- View Switching Logic ---
+        function switchView(viewName) {
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+
+            // Show requested view
+            if (viewName === 'list') {
+                document.getElementById('view-user-list').classList.add('active');
+            } else if (viewName === 'create') {
+                document.getElementById('view-create-user').classList.add('active');
+            } else if (viewName === 'edit') {
+                document.getElementById('view-edit-user').classList.add('active');
+            }
+        }
+
+        // --- Action Menu Logic ---
+        function toggleMenu(menuId) {
+            // Close all other menus first
+            document.querySelectorAll('.action-menu').forEach(el => {
+                if (el.id !== menuId) el.classList.remove('show');
+            });
+
+            const menu = document.getElementById(menuId);
+            menu.classList.toggle('show');
+        }
+
+        // Close menus when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.action-cell')) {
+                document.querySelectorAll('.action-menu').forEach(el => el.classList.remove('show'));
+            }
+        });
+
+        // --- Modal Logic ---
+        function openDeactivateModal(userName) {
+            document.getElementById('modal-user-name').textContent = userName;
+            document.getElementById('modal-deactivate').classList.add('show');
+            // Close any open menus
+            document.querySelectorAll('.action-menu').forEach(el => el.classList.remove('show'));
+        }
+
+        function closeDeactivateModal() {
+            document.getElementById('modal-deactivate').classList.remove('show');
+        }
+
+        // --- Bulk Actions Logic ---
+        function toggleBulkActions(checkbox) {
+            const bar = document.getElementById('bulkActionBar');
+            if (checkbox.checked) {
+                bar.classList.add('show');
+            } else {
+                bar.classList.remove('show');
+            }
+        }
+    </script>
+</body>
+
+</html>
