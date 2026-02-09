@@ -602,11 +602,11 @@
                                     <label class="form-label">Dimension Name <span
                                             style="color: var(--status-error);">*</span></label>
                                     <input type="text" class="form-control" value="Technical Skills"
-                                        oninput="updateTitle(this)">
+                                        oninput="updateTitle(this)" disabled>
                                 </div>
                                 <div class="form-col">
                                     <label class="form-label">Dimension Type</label>
-                                    <select class="form-control" onchange="updateIcon(this)">
+                                    <select class="form-control" onchange="updateIcon(this)" disabled>
                                         <option value="skill" selected>Skill</option>
                                         <option value="experience">Experience</option>
                                         <option value="education">Education</option>
@@ -618,7 +618,7 @@
                             <div class="form-row" style="margin-top: 20px;">
                                 <div class="form-col">
                                     <label class="form-label">Requirement Level</label>
-                                    <select class="form-control" onchange="updateBadge(this)">
+                                    <select class="form-control" onchange="updateBadge(this)" disabled>
                                         <option value="mandatory" selected>Mandatory</option>
                                         <option value="optional">Optional</option>
                                     </select>
@@ -626,27 +626,35 @@
                                 <div class="form-col">
                                     <label class="form-label">Display Order <span
                                             style="color: var(--status-error);">*</span></label>
-                                    <input type="number" class="form-control" value="1" onchange="updateSummary()">
+                                    <input type="number" class="form-control" value="1" onchange="updateSummary()"
+                                        disabled>
                                 </div>
                             </div>
 
                             <div class="form-group" style="margin-top: 20px;">
                                 <label class="form-label">Dimension Description (Guidance for HR)</label>
-                                <textarea class="form-control"
-                                    rows="2">Core technical competencies required for the role, including languages and frameworks.</textarea>
+                                <textarea class="form-control" rows="2"
+                                    disabled>Core technical competencies required for the role, including languages and frameworks.</textarea>
                             </div>
 
                             <div
                                 style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <label class="toggle-switch">
-                                        <input type="checkbox" checked onchange="updateSummary()">
+                                        <input type="checkbox" checked onchange="updateSummary()" disabled>
                                         <span class="slider"></span>
                                     </label>
                                     <span style="font-size: 14px; font-weight: 500;">Enabled</span>
                                 </div>
-                                <button class="btn btn-danger btn-sm" onclick="confirmDelete('dim-1')"><i
-                                        class="fa-solid fa-trash"></i> Delete Dimension</button>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn btn-secondary btn-sm"
+                                        onclick="toggleEditDimension('dim-1', this)" data-editing="false">
+                                        <i class="fa-solid fa-edit"></i> Update Dimension
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('dim-1')">
+                                        <i class="fa-solid fa-trash"></i> Delete Dimension
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -668,11 +676,11 @@
                                     <label class="form-label">Dimension Name <span
                                             style="color: var(--status-error);">*</span></label>
                                     <input type="text" class="form-control" value="Work Experience"
-                                        oninput="updateTitle(this)">
+                                        oninput="updateTitle(this)" disabled>
                                 </div>
                                 <div class="form-col">
                                     <label class="form-label">Dimension Type</label>
-                                    <select class="form-control" onchange="updateIcon(this)">
+                                    <select class="form-control" onchange="updateIcon(this)" disabled>
                                         <option value="skill">Skill</option>
                                         <option value="experience" selected>Experience</option>
                                         <option value="education">Education</option>
@@ -684,7 +692,7 @@
                             <div class="form-row" style="margin-top: 20px;">
                                 <div class="form-col">
                                     <label class="form-label">Requirement Level</label>
-                                    <select class="form-control" onchange="updateBadge(this)">
+                                    <select class="form-control" onchange="updateBadge(this)" disabled>
                                         <option value="mandatory" selected>Mandatory</option>
                                         <option value="optional">Optional</option>
                                     </select>
@@ -692,27 +700,35 @@
                                 <div class="form-col">
                                     <label class="form-label">Display Order <span
                                             style="color: var(--status-error);">*</span></label>
-                                    <input type="number" class="form-control" value="2" onchange="updateSummary()">
+                                    <input type="number" class="form-control" value="2" onchange="updateSummary()"
+                                        disabled>
                                 </div>
                             </div>
 
                             <div class="form-group" style="margin-top: 20px;">
                                 <label class="form-label">Dimension Description (Guidance for HR)</label>
-                                <textarea class="form-control"
-                                    rows="2">Relevant industry experience and past roles.</textarea>
+                                <textarea class="form-control" rows="2"
+                                    disabled>Relevant industry experience and past roles.</textarea>
                             </div>
 
                             <div
                                 style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <label class="toggle-switch">
-                                        <input type="checkbox" checked onchange="updateSummary()">
+                                        <input type="checkbox" checked onchange="updateSummary()" disabled>
                                         <span class="slider"></span>
                                     </label>
                                     <span style="font-size: 14px; font-weight: 500;">Enabled</span>
                                 </div>
-                                <button class="btn btn-danger btn-sm" onclick="confirmDelete('dim-2')"><i
-                                        class="fa-solid fa-trash"></i> Delete Dimension</button>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn btn-secondary btn-sm"
+                                        onclick="toggleEditDimension('dim-2', this)" data-editing="false">
+                                        <i class="fa-solid fa-edit"></i> Update Dimension
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('dim-2')">
+                                        <i class="fa-solid fa-trash"></i> Delete Dimension
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -734,11 +750,11 @@
                                     <label class="form-label">Dimension Name <span
                                             style="color: var(--status-error);">*</span></label>
                                     <input type="text" class="form-control" value="Certifications"
-                                        oninput="updateTitle(this)">
+                                        oninput="updateTitle(this)" disabled>
                                 </div>
                                 <div class="form-col">
                                     <label class="form-label">Dimension Type</label>
-                                    <select class="form-control" onchange="updateIcon(this)">
+                                    <select class="form-control" onchange="updateIcon(this)" disabled>
                                         <option value="skill">Skill</option>
                                         <option value="experience">Experience</option>
                                         <option value="education">Education</option>
@@ -750,7 +766,7 @@
                             <div class="form-row" style="margin-top: 20px;">
                                 <div class="form-col">
                                     <label class="form-label">Requirement Level</label>
-                                    <select class="form-control" onchange="updateBadge(this)">
+                                    <select class="form-control" onchange="updateBadge(this)" disabled>
                                         <option value="mandatory">Mandatory</option>
                                         <option value="optional" selected>Optional</option>
                                     </select>
@@ -758,27 +774,35 @@
                                 <div class="form-col">
                                     <label class="form-label">Display Order <span
                                             style="color: var(--status-error);">*</span></label>
-                                    <input type="number" class="form-control" value="3" onchange="updateSummary()">
+                                    <input type="number" class="form-control" value="3" onchange="updateSummary()"
+                                        disabled>
                                 </div>
                             </div>
 
                             <div class="form-group" style="margin-top: 20px;">
                                 <label class="form-label">Dimension Description (Guidance for HR)</label>
-                                <textarea class="form-control"
-                                    rows="2">Professional certifications relevant to the role (e.g., AWS, Google Cloud).</textarea>
+                                <textarea class="form-control" rows="2"
+                                    disabled>Professional certifications relevant to the role (e.g., AWS, Google Cloud).</textarea>
                             </div>
 
                             <div
                                 style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <label class="toggle-switch">
-                                        <input type="checkbox" checked onchange="updateSummary()">
+                                        <input type="checkbox" checked onchange="updateSummary()" disabled>
                                         <span class="slider"></span>
                                     </label>
                                     <span style="font-size: 14px; font-weight: 500;">Enabled</span>
                                 </div>
-                                <button class="btn btn-danger btn-sm" onclick="confirmDelete('dim-3')"><i
-                                        class="fa-solid fa-trash"></i> Delete Dimension</button>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn btn-secondary btn-sm"
+                                        onclick="toggleEditDimension('dim-3', this)" data-editing="false">
+                                        <i class="fa-solid fa-edit"></i> Update Dimension
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('dim-3')">
+                                        <i class="fa-solid fa-trash"></i> Delete Dimension
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -969,6 +993,31 @@
             if (optionalEl) optionalEl.textContent = optional;
         }
 
+        // --- Toggle Edit Mode ---
+        function toggleEditDimension(dimId, btn) {
+            const item = document.getElementById(dimId);
+            const inputs = item.querySelectorAll('input, select, textarea');
+            const isEditing = btn.getAttribute('data-editing') === 'true';
+
+            if (isEditing) {
+                // Save Mode -> Switching to Read-only
+                inputs.forEach(input => {
+                    input.disabled = true;
+                });
+                btn.innerHTML = '<i class="fa-solid fa-edit"></i> Update Dimension';
+                btn.className = 'btn btn-secondary btn-sm';
+                btn.setAttribute('data-editing', 'false');
+            } else {
+                // Update Mode -> Switching to Editable
+                inputs.forEach(input => {
+                    input.disabled = false;
+                });
+                btn.innerHTML = '<i class="fa-solid fa-save"></i> Save Changes';
+                btn.className = 'btn btn-primary btn-sm';
+                btn.setAttribute('data-editing', 'true');
+            }
+        }
+
         // --- Add Dimension ---
         function addDimension() {
             dimensionCount++;
@@ -1000,11 +1049,11 @@
                         <div class="form-row">
                             <div class="form-col">
                                 <label class="form-label">Dimension Name <span style="color: var(--status-error);">*</span></label>
-                                <input type="text" class="form-control" placeholder="Enter dimension name" oninput="updateTitle(this)">
+                                <input type="text" class="form-control" placeholder="Enter dimension name" oninput="updateTitle(this)" disabled>
                             </div>
                             <div class="form-col">
                                 <label class="form-label">Dimension Type</label>
-                                <select class="form-control" onchange="updateIcon(this)">
+                                <select class="form-control" onchange="updateIcon(this)" disabled>
                                     <option value="skill">Skill</option>
                                     <option value="experience">Experience</option>
                                     <option value="education">Education</option>
@@ -1017,31 +1066,38 @@
                         <div class="form-row" style="margin-top: 20px;">
                             <div class="form-col">
                                 <label class="form-label">Requirement Level</label>
-                                <select class="form-control" onchange="updateBadge(this)">
+                                <select class="form-control" onchange="updateBadge(this)" disabled>
                                     <option value="mandatory">Mandatory</option>
                                     <option value="optional" selected>Optional</option>
                                 </select>
                             </div>
                             <div class="form-col">
                                 <label class="form-label">Display Order <span style="color: var(--status-error);">*</span></label>
-                                <input type="number" class="form-control" value="${dimensionCount}">
+                                <input type="number" class="form-control" value="${dimensionCount}" disabled>
                             </div>
                         </div>
 
                         <div class="form-group" style="margin-top: 20px;">
                             <label class="form-label">Dimension Description (Guidance for HR)</label>
-                            <textarea class="form-control" rows="2" placeholder="Briefly describe what this dimension evaluates..."></textarea>
+                            <textarea class="form-control" rows="2" placeholder="Briefly describe what this dimension evaluates..." disabled></textarea>
                         </div>
 
                         <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <label class="toggle-switch">
-                                    <input type="checkbox" checked onchange="updateSummary()">
+                                    <input type="checkbox" checked onchange="updateSummary()" disabled>
                                     <span class="slider"></span>
                                 </label>
                                 <span style="font-size: 14px; font-weight: 500;">Enabled</span>
                             </div>
-                            <button class="btn btn-danger btn-sm" onclick="confirmDelete('${newId}')"><i class="fa-solid fa-trash"></i> Delete Dimension</button>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-secondary btn-sm" onclick="toggleEditDimension('${newId}', this)" data-editing="false">
+                                    <i class="fa-solid fa-edit"></i> Update Dimension
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="confirmDelete('${newId}')">
+                                    <i class="fa-solid fa-trash"></i> Delete Dimension
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>`;
