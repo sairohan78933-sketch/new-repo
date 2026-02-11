@@ -351,6 +351,52 @@
             display: block;
         }
 
+        /* --- Data Table --- */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            background: white;
+            margin-top: 20px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table th {
+            background: #F8F9FA;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-primary);
+            vertical-align: middle;
+        }
+
+        .data-table tbody tr:hover {
+            background: #F8F9FA;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table .form-control {
+            padding: 6px 10px;
+            height: 34px;
+        }
+
         /* --- Status Badges --- */
         .badge {
             display: inline-flex;
@@ -379,6 +425,12 @@
         .badge-info {
             background: var(--status-bg-info);
             color: var(--status-info);
+        }
+
+        .badge-role {
+            background: #E7F5FF;
+            color: var(--primary-blue);
+            border: 1px solid #D0EBFF;
         }
 
         /* --- Toggle Switch --- */
@@ -506,6 +558,23 @@
         .view-section.active {
             display: block;
         }
+
+        /* Bulk Action Bar */
+        .bulk-actions {
+            background: var(--text-primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            display: none;
+            /* Hidden by default */
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .bulk-actions.show {
+            display: flex;
+        }
     </style>
 </head>
 
@@ -522,8 +591,6 @@
             <a href="#" class="nav-item active"><i class="fa-solid fa-hammer"></i> Scoring Config</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-database"></i> Data Retention</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-history"></i> Audit Logs</a>
-            <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 24px;"></div>
-            <a href="#" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
         </nav>
     </aside>
 
@@ -577,6 +644,31 @@
                         </div>
                     </div>
 
+                    <!-- Bulk Action Bar -->
+                    <div class="bulk-actions" id="bulkActionBar">
+                        <span><i class="fa-solid fa-check-square"></i> <span id="selectedCount">0</span> Dimensions
+                            Selected</span>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-sm btn-secondary" onclick="disableSelectedDimensions()"
+                                style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;">Disable
+                                Selected</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteSelectedDimensions()">Delete
+                                Selected</button>
+                        </div>
+                    </div>
+
+                    <!-- Bulk Action Bar -->
+                    <div class="bulk-actions" id="bulkActionBar">
+                        <span><i class="fa-solid fa-check-square"></i> <span id="selectedCount">0</span> Dimensions
+                            Selected</span>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-sm btn-secondary"
+                                style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;">Disable
+                                Selected</button>
+                            <button class="btn btn-sm btn-danger">Delete Selected</button>
+                        </div>
+                    </div>
+
                     <div
                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                         <h3 style="font-size: 16px; font-weight: 600; color: var(--text-secondary);">Scoring Dimensions
@@ -585,226 +677,132 @@
                             Add New Dimension</button>
                     </div>
 
-                    <!-- Dimension 1: Technical Skills -->
-                    <div class="accordion-item active" id="dim-1">
-                        <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <div class="accordion-title">
-                                <i class="fa-solid fa-code"></i> Technical Skills
-                            </div>
-                            <div class="accordion-meta">
-                                <span class="badge badge-active">Mandatory</span>
-                                <i class="fa-solid fa-chevron-down" style="margin-left: 10px;"></i>
-                            </div>
-                        </div>
-                        <div class="accordion-body">
-                            <div class="form-row">
-                                <div class="form-col">
-                                    <label class="form-label">Dimension Name <span
-                                            style="color: var(--status-error);">*</span></label>
-                                    <input type="text" class="form-control" value="Technical Skills"
-                                        oninput="updateTitle(this)" disabled>
-                                </div>
-                                <div class="form-col">
-                                    <label class="form-label">Dimension Type</label>
-                                    <select class="form-control" onchange="updateIcon(this)" disabled>
-                                        <option value="skill" selected>Skill</option>
-                                        <option value="experience">Experience</option>
-                                        <option value="education">Education</option>
-                                        <option value="certification">Certification</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-row" style="margin-top: 20px;">
-                                <div class="form-col">
-                                    <label class="form-label">Requirement Level</label>
-                                    <select class="form-control" onchange="updateBadge(this)" disabled>
-                                        <option value="mandatory" selected>Mandatory</option>
-                                        <option value="optional">Optional</option>
-                                    </select>
-                                </div>
-                                <div class="form-col">
-                                    <label class="form-label">Display Order <span
-                                            style="color: var(--status-error);">*</span></label>
-                                    <input type="number" class="form-control" value="1" onchange="updateSummary()"
-                                        disabled>
-                                </div>
-                            </div>
-
-                            <div class="form-group" style="margin-top: 20px;">
-                                <label class="form-label">Dimension Description (Guidance for HR)</label>
-                                <textarea class="form-control" rows="2"
-                                    disabled>Core technical competencies required for the role, including languages and frameworks.</textarea>
-                            </div>
-
-                            <div
-                                style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" checked onchange="updateSummary()" disabled>
-                                        <span class="slider"></span>
-                                    </label>
-                                    <span style="font-size: 14px; font-weight: 500;">Enabled</span>
-                                </div>
-                                <div style="display: flex; gap: 10px;">
-                                    <button class="btn btn-secondary btn-sm"
-                                        onclick="toggleEditDimension('dim-1', this)" data-editing="false">
-                                        <i class="fa-solid fa-edit"></i> Update Dimension
-                                    </button>
-                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('dim-1')">
-                                        <i class="fa-solid fa-trash"></i> Delete Dimension
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Dimension 2: Work Experience -->
-                    <div class="accordion-item" id="dim-2">
-                        <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <div class="accordion-title">
-                                <i class="fa-solid fa-briefcase"></i> Work Experience
-                            </div>
-                            <div class="accordion-meta">
-                                <span class="badge badge-active">Mandatory</span>
-                                <i class="fa-solid fa-chevron-down" style="margin-left: 10px;"></i>
-                            </div>
-                        </div>
-                        <div class="accordion-body">
-                            <div class="form-row">
-                                <div class="form-col">
-                                    <label class="form-label">Dimension Name <span
-                                            style="color: var(--status-error);">*</span></label>
-                                    <input type="text" class="form-control" value="Work Experience"
-                                        oninput="updateTitle(this)" disabled>
-                                </div>
-                                <div class="form-col">
-                                    <label class="form-label">Dimension Type</label>
-                                    <select class="form-control" onchange="updateIcon(this)" disabled>
-                                        <option value="skill">Skill</option>
-                                        <option value="experience" selected>Experience</option>
-                                        <option value="education">Education</option>
-                                        <option value="certification">Certification</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-row" style="margin-top: 20px;">
-                                <div class="form-col">
-                                    <label class="form-label">Requirement Level</label>
-                                    <select class="form-control" onchange="updateBadge(this)" disabled>
-                                        <option value="mandatory" selected>Mandatory</option>
-                                        <option value="optional">Optional</option>
-                                    </select>
-                                </div>
-                                <div class="form-col">
-                                    <label class="form-label">Display Order <span
-                                            style="color: var(--status-error);">*</span></label>
-                                    <input type="number" class="form-control" value="2" onchange="updateSummary()"
-                                        disabled>
-                                </div>
-                            </div>
-
-                            <div class="form-group" style="margin-top: 20px;">
-                                <label class="form-label">Dimension Description (Guidance for HR)</label>
-                                <textarea class="form-control" rows="2"
-                                    disabled>Relevant industry experience and past roles.</textarea>
-                            </div>
-
-                            <div
-                                style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" checked onchange="updateSummary()" disabled>
-                                        <span class="slider"></span>
-                                    </label>
-                                    <span style="font-size: 14px; font-weight: 500;">Enabled</span>
-                                </div>
-                                <div style="display: flex; gap: 10px;">
-                                    <button class="btn btn-secondary btn-sm"
-                                        onclick="toggleEditDimension('dim-2', this)" data-editing="false">
-                                        <i class="fa-solid fa-edit"></i> Update Dimension
-                                    </button>
-                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('dim-2')">
-                                        <i class="fa-solid fa-trash"></i> Delete Dimension
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Dimension 3: Certifications (Optional) -->
-                    <div class="accordion-item" id="dim-3">
-                        <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <div class="accordion-title">
-                                <i class="fa-solid fa-certificate"></i> Certifications
-                            </div>
-                            <div class="accordion-meta">
-                                <span class="badge badge-active">Mandatory</span>
-                                <i class="fa-solid fa-chevron-down" style="margin-left: 10px;"></i>
-                            </div>
-                        </div>
-                        <div class="accordion-body">
-                            <div class="form-row">
-                                <div class="form-col">
-                                    <label class="form-label">Dimension Name <span
-                                            style="color: var(--status-error);">*</span></label>
-                                    <input type="text" class="form-control" value="Certifications"
-                                        oninput="updateTitle(this)" disabled>
-                                </div>
-                                <div class="form-col">
-                                    <label class="form-label">Dimension Type</label>
-                                    <select class="form-control" onchange="updateIcon(this)" disabled>
-                                        <option value="skill">Skill</option>
-                                        <option value="experience">Experience</option>
-                                        <option value="education">Education</option>
-                                        <option value="certification" selected>Certification</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-row" style="margin-top: 20px;">
-                                <div class="form-col">
-                                    <label class="form-label">Requirement Level</label>
-                                    <select class="form-control" onchange="updateBadge(this)" disabled>
-                                        <option value="mandatory">Mandatory</option>
-                                        <option value="optional" selected>Optional</option>
-                                    </select>
-                                </div>
-                                <div class="form-col">
-                                    <label class="form-label">Display Order <span
-                                            style="color: var(--status-error);">*</span></label>
-                                    <input type="number" class="form-control" value="3" onchange="updateSummary()"
-                                        disabled>
-                                </div>
-                            </div>
-
-                            <div class="form-group" style="margin-top: 20px;">
-                                <label class="form-label">Dimension Description (Guidance for HR)</label>
-                                <textarea class="form-control" rows="2"
-                                    disabled>Professional certifications relevant to the role (e.g., AWS, Google Cloud).</textarea>
-                            </div>
-
-                            <div
-                                style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" checked onchange="updateSummary()" disabled>
-                                        <span class="slider"></span>
-                                    </label>
-                                    <span style="font-size: 14px; font-weight: 500;">Enabled</span>
-                                </div>
-                                <div style="display: flex; gap: 10px;">
-                                    <button class="btn btn-secondary btn-sm"
-                                        onclick="toggleEditDimension('dim-3', this)" data-editing="false">
-                                        <i class="fa-solid fa-edit"></i> Update Dimension
-                                    </button>
-                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('dim-3')">
-                                        <i class="fa-solid fa-trash"></i> Delete Dimension
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Table Container -->
+                    <div class="table-container">
+                        <table class="data-table" id="dimensions-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;"><input type="checkbox" onchange="toggleBulkActions(this)">
+                                    </th>
+                                    <th style="width: 80px;">Order</th>
+                                    <th>Dimension Name</th>
+                                    <th>Type</th>
+                                    <th>Level</th>
+                                    <th style="width: 100px;">Status</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dimensions-body">
+                                <!-- Dimension 1 -->
+                                <tr id="dim-1">
+                                    <td><input type="checkbox"></td>
+                                    <td><input type="number" class="form-control" value="1" disabled></td>
+                                    <td><input type="text" class="form-control" value="Technical Skills" disabled></td>
+                                    <td>
+                                        <select class="form-control" onchange="updateIcon(this)" disabled>
+                                            <option value="skill" selected>Skill</option>
+                                            <option value="experience">Experience</option>
+                                            <option value="education">Education</option>
+                                            <option value="certification">Certification</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" onchange="updateBadge(this)" disabled>
+                                            <option value="mandatory" selected>Mandatory</option>
+                                            <option value="optional">Optional</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" checked onchange="updateSummary()" disabled>
+                                            <span class="slider"></span>
+                                        </label>
+                                    </td>
+                                    <td style="text-align: right; white-space: nowrap;">
+                                        <button class="btn btn-secondary btn-sm"
+                                            onclick="toggleEditDimension('dim-1', this)" data-editing="false">
+                                            <i class="fa-solid fa-edit"></i> Update
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" style="color: var(--status-error);"
+                                            onclick="confirmDelete('dim-1')">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Dimension 2 -->
+                                <tr id="dim-2">
+                                    <td><input type="checkbox"></td>
+                                    <td><input type="number" class="form-control" value="2" disabled></td>
+                                    <td><input type="text" class="form-control" value="Work Experience" disabled></td>
+                                    <td>
+                                        <select class="form-control" onchange="updateIcon(this)" disabled>
+                                            <option value="skill">Skill</option>
+                                            <option value="experience" selected>Experience</option>
+                                            <option value="education">Education</option>
+                                            <option value="certification">Certification</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" onchange="updateBadge(this)" disabled>
+                                            <option value="mandatory" selected>Mandatory</option>
+                                            <option value="optional">Optional</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" checked onchange="updateSummary()" disabled>
+                                            <span class="slider"></span>
+                                        </label>
+                                    </td>
+                                    <td style="text-align: right; white-space: nowrap;">
+                                        <button class="btn btn-secondary btn-sm"
+                                            onclick="toggleEditDimension('dim-2', this)" data-editing="false">
+                                            <i class="fa-solid fa-edit"></i> Update
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" style="color: var(--status-error);"
+                                            onclick="confirmDelete('dim-2')">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Dimension 3 -->
+                                <tr id="dim-3">
+                                    <td><input type="checkbox"></td>
+                                    <td><input type="number" class="form-control" value="3" disabled></td>
+                                    <td><input type="text" class="form-control" value="Certifications" disabled></td>
+                                    <td>
+                                        <select class="form-control" onchange="updateIcon(this)" disabled>
+                                            <option value="skill">Skill</option>
+                                            <option value="experience">Experience</option>
+                                            <option value="education">Education</option>
+                                            <option value="certification" selected>Certification</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" onchange="updateBadge(this)" disabled>
+                                            <option value="mandatory">Mandatory</option>
+                                            <option value="optional" selected>Optional</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" checked onchange="updateSummary()" disabled>
+                                            <span class="slider"></span>
+                                        </label>
+                                    </td>
+                                    <td style="text-align: right; white-space: nowrap;">
+                                        <button class="btn btn-secondary btn-sm"
+                                            onclick="toggleEditDimension('dim-3', this)" data-editing="false">
+                                            <i class="fa-solid fa-edit"></i> Update
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" style="color: var(--status-error);"
+                                            onclick="confirmDelete('dim-3')">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
                 </div>
@@ -894,21 +892,6 @@
     <script>
         let dimensionCount = 3;
 
-        // --- Accordion Logic ---
-        function toggleAccordion(header) {
-            const item = header.closest('.accordion-item');
-            item.classList.toggle('active');
-
-            // Rotate icon
-            const icon = header.querySelector('.fa-chevron-down');
-            if (icon) {
-                const isActive = item.classList.contains('active');
-                icon.style.transform = isActive ? 'rotate(180deg)' : 'rotate(0deg)';
-                // Ensure the body is displayed/hidden if not handled by CSS
-                // (CSS says .accordion-item.active .accordion-body { display: block; })
-            }
-        }
-
         // --- Modal Logic ---
         function openSubmitModal() {
             document.getElementById('modal-submit').classList.add('show');
@@ -919,6 +902,145 @@
         }
 
         // --- Delete Confirmation ---
+
+        // --- Bulk Actions ---
+        function toggleBulkActions(checkbox) {
+            const tbody = document.getElementById('dimensions-body');
+            const checkboxes = tbody.querySelectorAll('tbody input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = checkbox.checked);
+            updateSelectedCount();
+        }
+
+        function updateSelectedCount() {
+            const tbody = document.getElementById('dimensions-body');
+            const checked = tbody.querySelectorAll('input[type="checkbox"]:checked').length;
+            const bar = document.getElementById('bulkActionBar');
+            const countEl = document.getElementById('selectedCount');
+
+            if (countEl) countEl.textContent = checked;
+            if (checked > 0) {
+                bar.classList.add('show');
+            } else {
+                bar.classList.remove('show');
+            }
+        }
+
+        function disableSelectedDimensions() {
+            const tbody = document.getElementById('dimensions-body');
+            const selectedRows = tbody.querySelectorAll('tr:has(td:first-child input:checked)');
+
+            if (selectedRows.length === 0) return;
+
+            selectedRows.forEach(row => {
+                const toggle = row.querySelector('.toggle-switch input');
+                if (toggle) toggle.checked = false;
+            });
+
+            // Uncheck selection boxes and hide bar
+            tbody.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            const selectAll = document.querySelector('thead input[type="checkbox"]');
+            if (selectAll) selectAll.checked = false;
+
+            updateSelectedCount();
+            updateSummary();
+            alert(`Disabled ${selectedRows.length} dimensions.`);
+        }
+
+        function deleteSelectedDimensions() {
+            const tbody = document.getElementById('dimensions-body');
+            const selectedRows = tbody.querySelectorAll('tr:has(td:first-child input:checked)');
+
+            if (selectedRows.length === 0) return;
+
+            if (confirm(`Are you sure you want to delete ${selectedRows.length} selected dimensions? This action cannot be undone.`)) {
+                selectedRows.forEach(row => row.remove());
+
+                // Hide bar
+                const selectAll = document.querySelector('thead input[type="checkbox"]');
+                if (selectAll) selectAll.checked = false;
+
+                updateSelectedCount();
+                updateSummary();
+            }
+        }
+
+        // --- Toggle Edit Mode ---
+        function toggleEditDimension(dimId, btn) {
+            const row = document.getElementById(dimId);
+            const inputs = row.querySelectorAll('input, select');
+            const isEditing = btn.getAttribute('data-editing') === 'true';
+
+            if (isEditing) {
+                // Save Mode -> Switching to Read-only
+                inputs.forEach(input => {
+                    if (input.type !== 'checkbox' || input.closest('.toggle-switch')) {
+                        input.disabled = true;
+                    }
+                });
+                btn.innerHTML = '<i class="fa-solid fa-edit"></i> Update';
+                btn.className = 'btn btn-secondary btn-sm';
+                btn.setAttribute('data-editing', 'false');
+            } else {
+                // Update Mode -> Switching to Editable
+                inputs.forEach(input => {
+                    input.disabled = false;
+                });
+                btn.innerHTML = '<i class="fa-solid fa-save"></i> Save';
+                btn.className = 'btn btn-primary btn-sm';
+                btn.setAttribute('data-editing', 'true');
+            }
+        }
+
+        // --- Add Dimension ---
+        function addDimension() {
+            dimensionCount++;
+            const newId = `dim-${dimensionCount}`;
+            const tbody = document.getElementById('dimensions-body');
+
+            const rowHtml = `
+                <tr id="${newId}">
+                    <td><input type="checkbox" onchange="updateSelectedCount()"></td>
+                    <td><input type="number" class="form-control" value="${dimensionCount}" disabled></td>
+                    <td><input type="text" class="form-control" placeholder="New Dimension" disabled></td>
+                    <td>
+                        <select class="form-control" disabled>
+                            <option value="skill">Skill</option>
+                            <option value="experience">Experience</option>
+                            <option value="education">Education</option>
+                            <option value="certification">Certification</option>
+                            <option value="other" selected>Other</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control" onchange="updateSummary()" disabled>
+                            <option value="mandatory">Mandatory</option>
+                            <option value="optional" selected>Optional</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked onchange="updateSummary()" disabled>
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <button class="btn btn-secondary btn-sm" onclick="toggleEditDimension('${newId}', this)" data-editing="false">
+                            <i class="fa-solid fa-edit"></i> Update
+                        </button>
+                        <button class="btn btn-secondary btn-sm" style="color: var(--status-error);" onclick="confirmDelete('${newId}')">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
+
+            tbody.insertAdjacentHTML('beforeend', rowHtml);
+            updateSummary();
+
+            // Scroll to the new row
+            const newRow = document.getElementById(newId);
+            if (newRow) newRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
         function confirmDelete(elementId) {
             if (confirm("Are you sure you want to delete this dimension? This action cannot be undone.")) {
                 const element = document.getElementById(elementId);
@@ -929,58 +1051,17 @@
             }
         }
 
-        // --- Sync Functions ---
-        function updateTitle(input) {
-            const item = input.closest('.accordion-item');
-            const titleEl = item.querySelector('.accordion-title');
-            const icon = titleEl.querySelector('i');
-            const iconClass = icon.className;
-            titleEl.innerHTML = `<i class="${iconClass}"></i> ${input.value || 'New Dimension'}`;
-        }
-
-        function updateBadge(select) {
-            const item = select.closest('.accordion-item');
-            const badge = item.querySelector('.accordion-meta .badge');
-
-            if (select.value === 'mandatory') {
-                badge.className = 'badge badge-active';
-                badge.textContent = 'Mandatory';
-            } else {
-                badge.className = 'badge badge-info';
-                badge.textContent = 'Optional';
-            }
-            updateSummary();
-        }
-
-        function updateIcon(select) {
-            const item = select.closest('.accordion-item');
-            const titleEl = item.querySelector('.accordion-title');
-            const icon = titleEl.querySelector('i');
-
-            const iconMap = {
-                'skill': 'fa-code',
-                'experience': 'fa-briefcase',
-                'education': 'fa-graduation-cap',
-                'certification': 'fa-certificate'
-            };
-
-            icon.className = `fa-solid ${iconMap[select.value] || 'fa-circle-question'}`;
-        }
-
         function updateSummary() {
-            const items = document.querySelectorAll('.accordion-item');
+            const tbody = document.getElementById('dimensions-body');
+            const rows = tbody.querySelectorAll('tr');
             let total = 0;
             let mandatory = 0;
             let optional = 0;
 
-            items.forEach(item => {
-                // Check if it's not removed (though remove() handles this)
+            rows.forEach(row => {
                 total++;
-                // Get the requirement level from the select or the badge
-                const select = item.querySelector('select[onchange="updateBadge(this)"]');
-                const level = select ? select.value : (item.querySelector('.badge').textContent.toLowerCase().includes('mandatory') ? 'mandatory' : 'optional');
-
-                if (level === 'mandatory') mandatory++;
+                const levelSelect = row.cells[4].querySelector('select');
+                if (levelSelect.value === 'mandatory') mandatory++;
                 else optional++;
             });
 
@@ -993,133 +1074,8 @@
             if (optionalEl) optionalEl.textContent = optional;
         }
 
-        // --- Toggle Edit Mode ---
-        function toggleEditDimension(dimId, btn) {
-            const item = document.getElementById(dimId);
-            const inputs = item.querySelectorAll('input, select, textarea');
-            const isEditing = btn.getAttribute('data-editing') === 'true';
-
-            if (isEditing) {
-                // Save Mode -> Switching to Read-only
-                inputs.forEach(input => {
-                    input.disabled = true;
-                });
-                btn.innerHTML = '<i class="fa-solid fa-edit"></i> Update Dimension';
-                btn.className = 'btn btn-secondary btn-sm';
-                btn.setAttribute('data-editing', 'false');
-            } else {
-                // Update Mode -> Switching to Editable
-                inputs.forEach(input => {
-                    input.disabled = false;
-                });
-                btn.innerHTML = '<i class="fa-solid fa-save"></i> Save Changes';
-                btn.className = 'btn btn-primary btn-sm';
-                btn.setAttribute('data-editing', 'true');
-            }
-        }
-
-        // --- Add Dimension ---
-        function addDimension() {
-            dimensionCount++;
-            const newId = `dim-${dimensionCount}`;
-            const configMain = document.querySelector('.config-main');
-
-            // Find the list of current items to identify the top
-            const items = configMain.querySelectorAll('.accordion-item');
-
-            // Collapse others
-            items.forEach(item => {
-                item.classList.remove('active');
-                const icon = item.querySelector('.fa-chevron-down');
-                if (icon) icon.style.transform = 'rotate(0deg)';
-            });
-
-            const dimensionHtml = `
-                <div class="accordion-item active" id="${newId}">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <div class="accordion-title">
-                            <i class="fa-solid fa-circle-question"></i> New Dimension
-                        </div>
-                        <div class="accordion-meta">
-                            <span class="badge badge-info">Optional</span>
-                            <i class="fa-solid fa-chevron-down" style="margin-left: 10px; transform: rotate(180deg);"></i>
-                        </div>
-                    </div>
-                    <div class="accordion-body">
-                        <div class="form-row">
-                            <div class="form-col">
-                                <label class="form-label">Dimension Name <span style="color: var(--status-error);">*</span></label>
-                                <input type="text" class="form-control" placeholder="Enter dimension name" oninput="updateTitle(this)" disabled>
-                            </div>
-                            <div class="form-col">
-                                <label class="form-label">Dimension Type</label>
-                                <select class="form-control" onchange="updateIcon(this)" disabled>
-                                    <option value="skill">Skill</option>
-                                    <option value="experience">Experience</option>
-                                    <option value="education">Education</option>
-                                    <option value="certification">Certification</option>
-                                    <option value="other" selected>Other</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row" style="margin-top: 20px;">
-                            <div class="form-col">
-                                <label class="form-label">Requirement Level</label>
-                                <select class="form-control" onchange="updateBadge(this)" disabled>
-                                    <option value="mandatory">Mandatory</option>
-                                    <option value="optional" selected>Optional</option>
-                                </select>
-                            </div>
-                            <div class="form-col">
-                                <label class="form-label">Display Order <span style="color: var(--status-error);">*</span></label>
-                                <input type="number" class="form-control" value="${dimensionCount}" disabled>
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="margin-top: 20px;">
-                            <label class="form-label">Dimension Description (Guidance for HR)</label>
-                            <textarea class="form-control" rows="2" placeholder="Briefly describe what this dimension evaluates..." disabled></textarea>
-                        </div>
-
-                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <label class="toggle-switch">
-                                    <input type="checkbox" checked onchange="updateSummary()" disabled>
-                                    <span class="slider"></span>
-                                </label>
-                                <span style="font-size: 14px; font-weight: 500;">Enabled</span>
-                            </div>
-                            <div style="display: flex; gap: 10px;">
-                                <button class="btn btn-secondary btn-sm" onclick="toggleEditDimension('${newId}', this)" data-editing="false">
-                                    <i class="fa-solid fa-edit"></i> Update Dimension
-                                </button>
-                                <button class="btn btn-danger btn-sm" onclick="confirmDelete('${newId}')">
-                                    <i class="fa-solid fa-trash"></i> Delete Dimension
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-
-            if (items.length > 0) {
-                // Insert before the first item to place it at the top
-                items[0].insertAdjacentHTML('beforebegin', dimensionHtml);
-            } else {
-                // Fallback to append if no items exist
-                configMain.insertAdjacentHTML('beforeend', dimensionHtml);
-            }
-
-            updateSummary();
-
-            // Scroll to top
-            setTimeout(() => {
-                configMain.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }, 100);
-        }
+        // Initialize summary on load
+        window.onload = updateSummary;
     </script>
 </body>
 
