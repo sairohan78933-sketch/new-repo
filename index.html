@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartHire – Admin Dashboard</title>
-    
+
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Font Awesome for Icons -->
@@ -19,19 +20,19 @@
             --primary-gradient-end: #364FC7;
             --sidebar-gradient-top: #2F3E9E;
             --sidebar-gradient-bottom: #1E2A78;
-            
+
             --bg-main: #EEF1FF;
             --bg-card: #FFFFFF;
-            
+
             --accent-success: #2F9E44;
             --accent-info: #0CA678;
             --accent-warning: #F08C00;
             --accent-error: #E03131;
-            
+
             --text-primary: #1C1F2A;
             --text-secondary: #5C6270;
             --text-muted: #8B90A0;
-            
+
             --border-light: #E5E7EB;
             --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
@@ -66,7 +67,7 @@
             padding: 24px;
             font-size: 22px;
             font-weight: 700;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -82,7 +83,7 @@
             display: flex;
             align-items: center;
             padding: 12px 24px;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             transition: 0.2s;
             font-size: 14px;
@@ -91,12 +92,12 @@
 
         .nav-item:hover {
             color: white;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .nav-item.active {
             color: white;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.15);
             border-left: 4px solid var(--accent-info);
         }
 
@@ -107,7 +108,7 @@
 
         .nav-divider {
             height: 1px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             margin: 10px 24px;
         }
 
@@ -269,11 +270,30 @@
             font-size: 20px;
         }
 
-        .bg-blue-light { background: #E7F5FF; color: #1971C2; }
-        .bg-green-light { background: #EBFBEE; color: #2F9E44; }
-        .bg-orange-light { background: #FFF4E6; color: #F08C00; }
-        .bg-teal-light { background: #E6FCF5; color: #0CA678; }
-        .bg-red-light { background: #FFF5F5; color: #E03131; }
+        .bg-blue-light {
+            background: #E7F5FF;
+            color: #1971C2;
+        }
+
+        .bg-green-light {
+            background: #EBFBEE;
+            color: #2F9E44;
+        }
+
+        .bg-orange-light {
+            background: #FFF4E6;
+            color: #F08C00;
+        }
+
+        .bg-teal-light {
+            background: #E6FCF5;
+            color: #0CA678;
+        }
+
+        .bg-red-light {
+            background: #FFF5F5;
+            color: #E03131;
+        }
 
         /* --- System Status Overview --- */
         .status-row {
@@ -289,9 +309,16 @@
             gap: 5px;
         }
 
-        .status-label { font-size: 12px; color: var(--text-muted); }
-        .status-value { font-size: 14px; font-weight: 600; }
-        
+        .status-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .status-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
         .progress-bar {
             height: 6px;
             background: #F1F3F5;
@@ -299,6 +326,7 @@
             margin-top: 5px;
             overflow: hidden;
         }
+
         .progress-fill {
             height: 100%;
             background: var(--primary-gradient-start);
@@ -320,19 +348,49 @@
             padding: 12px 0;
             border-bottom: 1px solid var(--border-light);
         }
-        .list-item:last-child { border-bottom: none; }
 
-        .list-left { display: flex; align-items: center; gap: 12px; }
-        .list-icon { width: 32px; height: 32px; background: #F8F9FA; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); }
-        .list-text h4 { font-size: 13px; font-weight: 500; }
-        .list-text span { font-size: 11px; color: var(--text-muted); }
-        .list-right { font-weight: 600; font-size: 14px; }
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .list-icon {
+            width: 32px;
+            height: 32px;
+            background: #F8F9FA;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .list-text h4 {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .list-text span {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .list-right {
+            font-weight: 600;
+            font-size: 14px;
+        }
 
         /* --- Quick Filters --- */
         .filter-group {
             display: flex;
             gap: 10px;
         }
+
         select {
             flex: 1;
             padding: 8px 12px;
@@ -341,6 +399,7 @@
             color: var(--text-secondary);
             outline: none;
         }
+
         .btn-apply {
             background: var(--text-primary);
             color: white;
@@ -388,26 +447,47 @@
             justify-content: space-between;
             margin-bottom: 10px;
         }
+
         .badge-status {
             font-size: 11px;
             padding: 2px 8px;
             border-radius: 12px;
             font-weight: 600;
         }
-        .status-ok { background: #EBFBEE; color: #2F9E44; }
+
+        .status-ok {
+            background: #EBFBEE;
+            color: #2F9E44;
+        }
 
         /* Responsive */
         @media (max-width: 1024px) {
-            .main-grid { grid-template-columns: 1fr; }
-            .sub-grid { grid-template-columns: 1fr; }
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sub-grid {
+                grid-template-columns: 1fr;
+            }
         }
+
         @media (max-width: 768px) {
-            .sidebar { display: none; } /* Simplified for single file demo */
-            .status-row { grid-template-columns: 1fr 1fr; }
-            .footer-actions { grid-template-columns: 1fr; }
+            .sidebar {
+                display: none;
+            }
+
+            /* Simplified for single file demo */
+            .status-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-actions {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- 7.2 LEFT NAVIGATION SIDEBAR -->
@@ -422,9 +502,6 @@
             <a href="#" class="nav-item"><i class="fa-solid fa-database"></i> Data Retention</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-history"></i> Audit Logs</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-area-chart"></i> System Monitoring</a>
-            <div class="nav-divider"></div>
-            <a href="#" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-circle-question"></i> Help</a>
         </nav>
     </aside>
 
@@ -449,7 +526,7 @@
         </header>
 
         <div class="dashboard-scroll">
-            
+
             <!-- 7.3 SYSTEM OVERVIEW – KPI CARDS -->
             <div class="kpi-grid">
                 <div class="card kpi-card">
@@ -498,7 +575,9 @@
                 <div class="status-item">
                     <span class="status-label">STORAGE USAGE</span>
                     <span class="status-value">65%</span>
-                    <div class="progress-bar"><div class="progress-fill"></div></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
                 </div>
                 <div class="status-item">
                     <span class="status-label">API STATUS</span>
@@ -512,10 +591,10 @@
 
             <!-- MAIN GRID -->
             <div class="main-grid">
-                
+
                 <!-- LEFT COLUMN -->
                 <div class="left-col">
-                    
+
                     <!-- 7.6 & 7.7 CHARTS ROW -->
                     <div class="sub-grid">
                         <!-- Governance Control -->
@@ -569,7 +648,7 @@
 
                 <!-- RIGHT COLUMN -->
                 <div class="right-col">
-                    
+
                     <!-- 7.5 USER STATISTICS -->
                     <div class="card" style="margin-bottom: 24px;">
                         <div class="card-header">
@@ -578,21 +657,27 @@
                         <div class="list-item">
                             <div class="list-left">
                                 <div class="list-icon"><i class="fa-solid fa-user-tie"></i></div>
-                                <div class="list-text"><h4>Recruiters</h4></div>
+                                <div class="list-text">
+                                    <h4>Recruiters</h4>
+                                </div>
                             </div>
                             <div class="list-right">12</div>
                         </div>
                         <div class="list-item">
                             <div class="list-left">
                                 <div class="list-icon"><i class="fa-solid fa-user-group"></i></div>
-                                <div class="list-text"><h4>Hiring Managers</h4></div>
+                                <div class="list-text">
+                                    <h4>Hiring Managers</h4>
+                                </div>
                             </div>
                             <div class="list-right">5</div>
                         </div>
                         <div class="list-item">
                             <div class="list-left">
                                 <div class="list-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                                <div class="list-text"><h4>Admins</h4></div>
+                                <div class="list-text">
+                                    <h4>Admins</h4>
+                                </div>
                             </div>
                             <div class="list-right">3</div>
                         </div>
@@ -621,33 +706,39 @@
                         <div style="max-height: 200px; overflow-y: auto;">
                             <div class="list-item">
                                 <div class="list-left">
-                                    <div class="list-icon" style="color: var(--accent-info);"><i class="fa-solid fa-plus"></i></div>
+                                    <div class="list-icon" style="color: var(--accent-info);"><i
+                                            class="fa-solid fa-plus"></i></div>
                                     <div class="list-text">
                                         <h4>New job posted</h4>
                                         <span>Data Scientist</span>
                                     </div>
                                 </div>
-                                <div class="list-right" style="font-size: 11px; color: var(--text-muted); font-weight: 400;">20m</div>
+                                <div class="list-right"
+                                    style="font-size: 11px; color: var(--text-muted); font-weight: 400;">20m</div>
                             </div>
                             <div class="list-item">
                                 <div class="list-left">
-                                    <div class="list-icon" style="color: var(--accent-warning);"><i class="fa-solid fa-user-plus"></i></div>
+                                    <div class="list-icon" style="color: var(--accent-warning);"><i
+                                            class="fa-solid fa-user-plus"></i></div>
                                     <div class="list-text">
                                         <h4>User Mike T added</h4>
                                         <span>As Admin</span>
                                     </div>
                                 </div>
-                                <div class="list-right" style="font-size: 11px; color: var(--text-muted); font-weight: 400;">1h</div>
+                                <div class="list-right"
+                                    style="font-size: 11px; color: var(--text-muted); font-weight: 400;">1h</div>
                             </div>
                             <div class="list-item">
                                 <div class="list-left">
-                                    <div class="list-icon" style="color: var(--text-secondary);"><i class="fa-solid fa-sliders"></i></div>
+                                    <div class="list-icon" style="color: var(--text-secondary);"><i
+                                            class="fa-solid fa-sliders"></i></div>
                                     <div class="list-text">
                                         <h4>System settings</h4>
                                         <span>Updated</span>
                                     </div>
                                 </div>
-                                <div class="list-right" style="font-size: 11px; color: var(--text-muted); font-weight: 400;">1d</div>
+                                <div class="list-right"
+                                    style="font-size: 11px; color: var(--text-muted); font-weight: 400;">1d</div>
                             </div>
                         </div>
                     </div>
@@ -655,18 +746,7 @@
                 </div>
             </div>
 
-            <!-- 7.11 FOOTER ACTION BUTTONS -->
-            <div class="footer-actions">
-                <a href="#" class="action-btn">
-                    <i class="fa-solid fa-briefcase"></i> Manage Jobs
-                </a>
-                <a href="#" class="action-btn">
-                    <i class="fa-solid fa-users-gear"></i> Manage Users
-                </a>
-                <a href="#" class="action-btn">
-                    <i class="fa-solid fa-cogs"></i> System Settings
-                </a>
-            </div>
+
 
         </div>
     </main>
@@ -769,4 +849,5 @@
         });
     </script>
 </body>
+
 </html>
